@@ -3,451 +3,328 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🛋️ Pegue e Monte - Aluguel de Decoração</title>
-    
+    <title>Pegue e Monte - Aluguel de Decoração para Festas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
-        /* ESTILOS SIMPLES E BONITOS */
+        :root {
+            --gold: #D4AF37; --gold-light: #F5E8C7; --gold-dark: #B8860B;
+            --brown: #8B7355; --brown-dark: #5D4037; --beige: #F5F0E6;
+            --cream: #FFF8E1; --white: #FFFFFF; --shadow: rgba(139, 115, 85, 0.15);
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f9f5f0;
-            color: #5D4037;
-        }
-        
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            padding: 0 15px; 
-        }
-        
-        /* CABEÇALHO */
+        body { font-family: 'Montserrat', sans-serif; background: var(--beige); color: var(--brown-dark); line-height: 1.6; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
         header { 
-            background: linear-gradient(135deg, #8B7355 0%, #A1886F 100%);
-            color: white;
-            padding: 30px 0;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(139, 115, 85, 0.2);
+            background: linear-gradient(135deg, var(--brown) 0%, var(--brown-dark) 100%); 
+            color: var(--cream); padding: 40px 0; text-align: center; 
+            box-shadow: 0 4px 20px rgba(93, 64, 55, 0.2); position: relative; overflow: hidden;
         }
-        
-        .logo { 
-            font-size: 3.5rem; 
-            margin-bottom: 15px;
-            display: inline-block;
-            animation: float 3s ease-in-out infinite;
+        .logo-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
+        .logo-circle {
+            width: 120px; height: 120px; border-radius: 50%; margin-bottom: 20px;
+            border: 5px solid var(--cream); overflow: hidden; box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+            background: var(--white); display: flex; align-items: center; justify-content: center;
         }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .logo-circle img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
+        h1 { font-family: 'Playfair Display', serif; font-size: 3.2rem; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px; }
+        .tagline { font-size: 1.3rem; opacity: 0.9; max-width: 600px; margin: 0 auto 25px; font-weight: 300; }
+        .products-section { padding: 60px 0; }
+        .section-title { 
+            text-align: center; font-family: 'Playfair Display', serif; font-size: 2.5rem; 
+            color: var(--brown-dark); margin-bottom: 50px; position: relative;
         }
-        
-        h1 { 
-            font-size: 2.5rem; 
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        .section-title::after {
+            content: ""; position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%);
+            width: 80px; height: 3px; background: var(--gold);
         }
-        
-        .tagline { 
-            font-size: 1.2rem; 
-            opacity: 0.9;
-            margin-bottom: 20px;
-        }
-        
-        /* GRADE DE PRODUTOS */
         .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-            padding: 50px 0;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 35px;
         }
-        
-        /* CARTÃO DE PRODUTO */
         .product-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-            border: 1px solid #eee;
+            background: var(--white); border-radius: 18px; overflow: hidden;
+            box-shadow: 0 10px 30px var(--shadow); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; flex-direction: column; height: 100%;
         }
-        
-        .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        .product-card:hover { transform: translateY(-15px); box-shadow: 0 20px 40px rgba(139, 115, 85, 0.25); }
+        .product-image { height: 280px; overflow: hidden; position: relative; }
+        .product-image img { 
+            width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s ease;
+            cursor: pointer; /* Muda o cursor para indicar que é clicável */
         }
-        
-        .product-image {
-            height: 220px;
-            background: linear-gradient(135deg, #f5f1e8 0%, #e8dfd0 100%);
-            overflow: hidden;
-            position: relative;
+        .product-card:hover .product-image img { transform: scale(1.08); }
+        .product-info { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
+        .product-name { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--brown-dark); margin-bottom: 15px; line-height: 1.3; }
+        .product-desc { color: #666; margin-bottom: 20px; flex-grow: 1; }
+        .date-selection { margin-bottom: 25px; }
+        .date-label { display: block; font-weight: 600; color: var(--brown-dark); margin-bottom: 10px; font-size: 1rem; }
+        .date-input {
+            width: 100%; padding: 14px; border: 2px solid var(--gold-light); border-radius: 10px;
+            font-family: 'Montserrat', sans-serif; font-size: 1rem; color: var(--brown-dark);
+            background-color: var(--cream); cursor: pointer;
         }
-        
-        .product-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-        
-        .product-card:hover .product-image img {
-            transform: scale(1.05);
-        }
-        
-        .product-info { 
-            padding: 25px; 
-        }
-        
-        .product-name { 
-            font-size: 1.4rem; 
-            color: #5D4037; 
-            margin-bottom: 12px;
-            font-weight: 700;
-            line-height: 1.3;
-        }
-        
-        .product-desc { 
-            color: #666; 
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-        
-        .product-details {
-            background: #f9f5f0;
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            font-size: 0.95rem;
-            border-left: 3px solid #8B7355;
-        }
-        
-        .product-price { 
-            font-size: 1.8rem; 
-            color: #8B7355; 
-            font-weight: bold;
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .price-label {
-            font-size: 0.9rem;
-            color: #888;
-            font-weight: normal;
-        }
-        
-        /* BOTÃO WHATSAPP */
+        .date-input:focus { outline: none; border-color: var(--gold); }
         .whatsapp-btn {
-            display: block;
-            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-            color: white;
-            text-align: center;
-            padding: 16px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin-top: 20px;
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: white;
+            text-align: center; padding: 18px; border-radius: 12px; text-decoration: none;
+            font-weight: 600; font-size: 1.1rem; transition: all 0.3s; border: none; cursor: pointer;
+            margin-top: auto;
         }
-        
         .whatsapp-btn:hover {
             background: linear-gradient(135deg, #128C7E 0%, #25D366 100%);
-            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
-            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4); transform: translateY(-3px);
         }
-        
-        /* RODAPÉ */
-        footer {
-            background: linear-gradient(135deg, #5D4037 0%, #3E2723 100%);
-            color: white;
-            padding: 40px 0;
-            text-align: center;
-            margin-top: 60px;
-        }
-        
-        .contact-info { 
-            font-size: 1.3rem; 
-            margin-bottom: 25px;
-            font-weight: bold;
-        }
-        
-        .whatsapp-link {
-            color: #25D366;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.2rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255,255,255,0.1);
-            padding: 12px 25px;
-            border-radius: 50px;
-            transition: all 0.3s;
-        }
-        
-        .whatsapp-link:hover { 
-            background: rgba(37, 211, 102, 0.1);
-            transform: scale(1.05);
-        }
-        
-        /* BOTÃO FLUTUANTE */
+        .whatsapp-btn i { font-size: 1.3rem; }
         .whatsapp-float {
+            position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white;
+            width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 2rem; text-decoration: none;
+            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.4); z-index: 1000; transition: all 0.3s;
+        }
+        .whatsapp-float:hover { transform: scale(1.1); background: #128C7E; }
+        footer {
+            background: var(--brown-dark); color: var(--cream); padding: 50px 0 30px; text-align: center;
+        }
+        .whatsapp-link {
+            display: inline-flex; align-items: center; gap: 12px; background: rgba(212, 175, 55, 0.1);
+            color: var(--gold-light); padding: 15px 30px; border-radius: 50px; text-decoration: none;
+            font-weight: 600; font-size: 1.2rem; margin-bottom: 30px; transition: all 0.3s;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        .whatsapp-link:hover { background: rgba(212, 175, 55, 0.2); transform: translateY(-3px); }
+
+        /* MODAL PARA VISUALIZAÇÃO DA IMAGEM (NOVO) */
+        .image-modal {
+            display: none; /* Escondido por padrão */
             position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background: #25D366;
-            color: white;
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
+            z-index: 2000; /* Fica acima de tudo */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9); /* Fundo escuro */
             justify-content: center;
-            font-size: 2rem;
-            text-decoration: none;
-            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.4);
-            z-index: 1000;
-            transition: all 0.3s;
-            animation: pulse 2s infinite;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
         }
-        
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        .image-modal.active {
+            display: flex;
         }
-        
-        .whatsapp-float:hover {
-            transform: scale(1.1);
-            animation: none;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
-        
-        /* RESPONSIVO */
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.5);
+        }
+        .close-modal {
+            position: absolute;
+            top: 25px;
+            right: 35px;
+            color: var(--white);
+            font-size: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+            z-index: 2001;
+        }
+        .close-modal:hover {
+            color: var(--gold);
+        }
+
         @media (max-width: 768px) {
-            .products-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-                padding: 30px 0;
-            }
-            
-            h1 { font-size: 2rem; }
-            .logo { font-size: 3rem; }
-            
-            .whatsapp-float {
-                width: 60px;
-                height: 60px;
-                font-size: 1.8rem;
-                bottom: 20px;
-                right: 20px;
-            }
+            h1 { font-size: 2.5rem; } .logo-circle { width: 100px; height: 100px; }
+            .section-title { font-size: 2rem; } .products-grid { grid-template-columns: 1fr; max-width: 500px; margin: 0 auto; }
+            .whatsapp-float { width: 60px; height: 60px; font-size: 1.8rem; bottom: 20px; right: 20px; }
+            .close-modal { top: 15px; right: 20px; font-size: 40px; }
         }
+        .flatpickr-calendar { font-family: 'Montserrat', sans-serif; }
     </style>
 </head>
 <body>
     <header>
         <div class="container">
-            <div class="logo">🛋️</div>
-            <h1>Pegue e Monte</h1>
-            <p class="tagline">Aluguel de Decoração para Eventos Especiais</p>
-            <p style="opacity: 0.8; font-size: 0.9rem; margin-top: 10px;">
-                ⭐ Catálogo sempre atualizado ⭐
-            </p>
+            <div class="logo-container">
+                <div class="logo-circle">
+                    <img src="https://i.postimg.cc/dtBhFrvP/Screenshot-2025-12-22-21-25-53-869-com-instagram-android-edit.jpg" 
+                         alt="Logo Pegue e Monte" 
+                         onclick="openImageModal(this.src, this.alt)">
+                </div>
+                <h1>Pegue e Monte</h1>
+                <p class="tagline">Alugue decorações encantadoras para tornar sua festa inesquecível</p>
+            </div>
         </div>
     </header>
-    
-    <div class="container">
-        <div class="products-grid" id="productsContainer">
-            <!-- PRODUTOS APARECEM AQUI AUTOMATICAMENTE -->
+
+    <section class="products-section">
+        <div class="container">
+            <h2 class="section-title">Nossa Coleção para Aluguel</h2>
+            <div class="products-grid" id="productsContainer">
+                <!-- Produtos são inseridos aqui pelo JavaScript -->
+            </div>
         </div>
-    </div>
-    
+    </section>
+
     <footer>
         <div class="container">
-            <p class="contact-info">📞 Entre em Contato</p>
+            <p class="contact-info">Fale Conosco para Alugar</p>
             <p>
                 <a href="https://wa.me/5511999999999" class="whatsapp-link" id="whatsappLink">
-                    <span>💬</span> WhatsApp: (11) 99999-9999
+                    <i class="fab fa-whatsapp"></i> WhatsApp: (11) 99999-9999
                 </a>
             </p>
-            <p style="margin-top: 15px; font-size: 1.1rem;">
-                Atendimento rápido e personalizado!
-            </p>
-            <p style="margin-top: 25px; opacity: 0.8; font-size: 0.9rem;">
-                © 2024 Pegue e Monte - Todos os direitos reservados
+            <p class="footer-text">
+                © 2024 Pegue e Monte - Aluguel de Decoração para Festas<br>Todos os direitos reservados
             </p>
         </div>
     </footer>
-    
-    <a href="https://wa.me/5511999999999" class="whatsapp-float">💬</a>
 
+    <a href="https://wa.me/5511999999999" class="whatsapp-float" aria-label="Fale conosco no WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- MODAL PARA VISUALIZAÇÃO DE IMAGEM (NOVO) -->
+    <div id="imageModal" class="image-modal" onclick="closeImageModal(event)">
+        <span class="close-modal" onclick="closeImageModal(event)">&times;</span>
+        <img class="modal-content" id="expandedImage" alt="Imagem ampliada">
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
     <script>
-        // =========== SUA LISTA DE PRODUTOS ===========
-        // EDITE AQUI! Adicione, remova ou modifique os produtos
-        
-        const MEUS_PRODUTOS = [
+        const PRODUTOS = [
             {
-                id: 1,
-                nome: "Painel de Sereia",
-                preco: 100,
-                descricao: "Arco decorativo elegante para entrada de festas",
-                foto: "https://i.postimg.cc/Xvd3m94K/IMG-20251222-112558-169.jpg",
+                id: 1, nome: "Arco de Balões Premium",
+                descricao: "Arco decorativo elegante para entrada de festas, feito com balões de alta qualidade.",
+                foto: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&auto=format&fit=crop",
                 tamanho: "3x2 metros"
             },
             {
-                id: 2,
-                nome: "Painel Fotográfico Rustico",
-                preco: 95,
-                descricao: "Painel de madeira rústica para fotos em eventos",
-                foto: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400",
+                id: 2, nome: "Painel Fotográfico Rustico",
+                descricao: "Painel de madeira rústica para fotos em eventos, trazendo charme e originalidade.",
+                foto: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&auto=format&fit=crop",
                 tamanho: "2x3 metros"
             },
             {
-                id: 3,
-                nome: "Mesa de Doces Completa",
-                preco: 120,
-                descricao: "Mesa decorada para servir doces em festas",
-                foto: "https://images.unsplash.com/photo-1535141192574-5d4897c12636?w=400",
+                id: 3, nome: "Mesa de Doces Completa",
+                descricao: "Mesa decorada para servir doces em festas, com toalhas e arranjos especiais.",
+                foto: "https://images.unsplash.com/photo-1535141192574-5d4897c12636?w=800&auto=format&fit=crop",
                 tamanho: "2x0.8 metros"
-            },
-            {
-                id: 4,
-                nome: "Cadeira de Noiva Decorada",
-                preco: 45,
-                descricao: "Cadeira especialmente decorada para noivas",
-                foto: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=400",
-                tamanho: "Padrão"
-            },
-            {
-                id: 5,
-                nome: "Sofá de Pallet Rustico",
-                preco: 80,
-                descricao: "Sofá de madeira rústico para eventos ao ar livre",
-                foto: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
-                tamanho: "2x1 metros"
-            },
-            {
-                id: 6,
-                nome: "Painel de Flores Artificial",
-                preco: 200,
-                descricao: "Painel decorativo com flores artificiais",
-                foto: "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=400",
-                tamanho: "3x2 metros"
             }
         ];
-        
-        // =========== SEU WHATSAPP ===========
-        // MUDE AQUI PARA SEU NÚMERO!
         const WHATSAPP_NUMBER = "5511999999999";
-        
-        // =========== FUNÇÃO PARA MOSTRAR PRODUTOS ===========
+
         function mostrarProdutos() {
             const container = document.getElementById('productsContainer');
-            
-            if (!MEUS_PRODUTOS || MEUS_PRODUTOS.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align: center; grid-column: 1/-1; padding: 80px 20px;">
-                        <div style="font-size: 5rem; color: #ddd; margin-bottom: 20px;">📭</div>
-                        <p style="font-size: 1.3rem; color: #5D4037;">Em breve novidades!</p>
-                        <p style="color: #999; margin-top: 15px;">Estamos preparando novos produtos</p>
-                    </div>
-                `;
+            if (!PRODUTOS.length) {
+                container.innerHTML = `<div style="text-align: center; grid-column: 1/-1; padding: 80px 20px;">
+                    <h3>Coleção em Atualização</h3><p>Novas peças incríveis em breve!</p></div>`;
                 return;
             }
-            
             let html = '';
-            
-            MEUS_PRODUTOS.forEach((produto, index) => {
-                const mensagem = `Olá! Gostaria de alugar: ${produto.nome} - R$ ${produto.preco}/dia`;
-                const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(mensagem)}`;
-                
+            PRODUTOS.forEach(produto => {
                 html += `
-                    <div class="product-card">
+                    <div class="product-card" data-product-id="${produto.id}">
                         <div class="product-image">
-                            <img src="${produto.foto}" alt="${produto.nome}"
-                                 onerror="this.src='https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400'">
+                            <img src="${produto.foto}" 
+                                 alt="${produto.nome}" 
+                                 loading="lazy"
+                                 onclick="openImageModal(this.src, this.alt)">
                         </div>
                         <div class="product-info">
                             <h3 class="product-name">${produto.nome}</h3>
                             <p class="product-desc">${produto.descricao}</p>
-                            
-                            <div class="product-details">
-                                <p><strong>📏 Tamanho:</strong> ${produto.tamanho}</p>
+                            <div class="date-selection">
+                                <label class="date-label"><i class="far fa-calendar-alt"></i> Selecione a data desejada:</label>
+                                <input type="text" class="date-input" placeholder="Clique para escolher a data" readonly>
                             </div>
-                            
-                            <div class="product-price">
-                                <span class="price-label">Apenas</span>
-                                R$ ${produto.preco.toFixed(2).replace('.', ',')}/dia
-                            </div>
-                            
-                            <a href="${whatsappUrl}" class="whatsapp-btn" target="_blank" rel="noopener">
-                                💬 Alugar agora via WhatsApp
+                            <a href="#" class="whatsapp-btn" onclick="enviarWhatsApp(this, ${produto.id})">
+                                <i class="fab fa-whatsapp"></i> Consultar Aluguel
                             </a>
                         </div>
                     </div>
                 `;
             });
-            
             container.innerHTML = html;
-            
-            // Mostrar contador no console
-            console.log(`✅ ${MEUS_PRODUTOS.length} produtos carregados`);
+            inicializarSeletoresData();
         }
-        
-        // =========== CONFIGURAÇÃO INICIAL ===========
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🛋️ Pegue e Monte - Site carregado');
+
+        function inicializarSeletoresData() {
+            flatpickr(".date-input", {
+                locale: "pt",
+                minDate: "today",
+                dateFormat: "d/m/Y",
+                onChange: function(selectedDates, dateStr) {
+                    let card = this.input.closest('.product-card');
+                    card.setAttribute('data-selected-date', dateStr);
+                }
+            });
+        }
+
+        function enviarWhatsApp(botaoElement, produtoId) {
+            const card = botaoElement.closest('.product-card');
+            const produtoNome = card.querySelector('.product-name').textContent;
+            const dataSelecionada = card.getAttribute('data-selected-date');
+
+            if (!dataSelecionada) {
+                alert("Por favor, selecione uma data para o aluguel.");
+                card.querySelector('.date-input').focus();
+                return false;
+            }
+
+            const mensagem = `Olá! Gostaria de consultar o aluguel para:\n*Produto:* ${produtoNome}\n*Data de Interesse:* ${dataSelecionada}`;
+            const urlWhatsApp = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(mensagem)}`;
+            window.open(urlWhatsApp, '_blank');
+            return false;
+        }
+
+        /* FUNÇÕES PARA O VISUALIZADOR DE IMAGEM (NOVO) */
+        function openImageModal(imageSrc, imageAlt) {
+            const modal = document.getElementById('imageModal');
+            const expandedImg = document.getElementById('expandedImage');
             
-            // Atualizar todos os links do WhatsApp
+            expandedImg.src = imageSrc;
+            expandedImg.alt = imageAlt;
+            modal.classList.add('active');
+            // Impede a rolagem da página quando o modal estiver aberto
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal(event) {
+            // Fecha se clicar no 'X' ou fora da imagem
+            if (event.target.classList.contains('close-modal') || event.target.id === 'imageModal') {
+                const modal = document.getElementById('imageModal');
+                modal.classList.remove('active');
+                // Restaura a rolagem da página
+                document.body.style.overflow = 'auto';
+            }
+            // Evita que o clique na própria imagem feche o modal
+            event.stopPropagation();
+        }
+
+        // Fecha o modal com a tecla ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const modal = document.getElementById('imageModal');
+                if (modal.classList.contains('active')) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            }
+        });
+
+        // Inicialização do site
+        document.addEventListener('DOMContentLoaded', function() {
+            mostrarProdutos();
             document.querySelectorAll('.whatsapp-float, #whatsappLink').forEach(link => {
                 link.href = `https://wa.me/${WHATSAPP_NUMBER}`;
             });
-            
-            // Mostrar produtos
-            mostrarProdutos();
-            
-            // Adicionar funcionalidade de atualização (opcional)
-            window.atualizarSite = function() {
-                console.log('🔄 Recarregando produtos...');
-                mostrarProdutos();
-                alert('✅ Produtos atualizados!');
-            };
         });
-        
-        // =========== FUNÇÕES ÚTEIS PARA VOCÊ ===========
-        
-        // 1. Para ver quantos produtos tem
-        window.verQuantidade = function() {
-            alert(`📊 Total de produtos: ${MEUS_PRODUTOS.length}`);
-        };
-        
-        // 2. Para adicionar um produto rapidamente (no console)
-        window.adicionarProduto = function(nome, preco, descricao, foto, tamanho) {
-            const novoProduto = {
-                id: Date.now(),
-                nome: nome,
-                preco: parseFloat(preco),
-                descricao: descricao,
-                foto: foto,
-                tamanho: tamanho
-            };
-            
-            MEUS_PRODUTOS.push(novoProduto);
-            mostrarProdutos();
-            console.log('✅ Produto adicionado:', novoProduto);
-            alert('✅ Produto adicionado! Atualize o código para salvar permanentemente.');
-        };
-        
-        // 3. Para copiar a lista de produtos (útil para backup)
-        window.copiarProdutos = function() {
-            const json = JSON.stringify(MEUS_PRODUTOS, null, 2);
-            navigator.clipboard.writeText(json).then(() => {
-                alert('✅ Lista de produtos copiada! Cole em um bloco de notas para backup.');
-            });
-        };
     </script>
 </body>
 </html>
