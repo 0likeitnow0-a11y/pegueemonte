@@ -48,12 +48,100 @@
             display: flex; flex-direction: column; height: 100%;
         }
         .product-card:hover { transform: translateY(-15px); box-shadow: 0 20px 40px rgba(139, 115, 85, 0.25); }
-        .product-image { height: 280px; overflow: hidden; position: relative; }
-        .product-image img { 
-            width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s ease;
-            cursor: pointer; /* Muda o cursor para indicar que é clicável */
+        
+        /* CARROSSEL DE IMAGENS */
+        .product-image { 
+            height: 280px; overflow: hidden; position: relative; 
+            user-select: none; -webkit-user-drag: none;
         }
-        .product-card:hover .product-image img { transform: scale(1.08); }
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .carousel-slide {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s ease;
+        }
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--brown-dark);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s;
+            opacity: 0;
+        }
+        .carousel-container:hover .carousel-arrow {
+            opacity: 0.8;
+        }
+        .carousel-arrow:hover {
+            background: var(--white);
+            opacity: 1 !important;
+            transform: translateY(-50%) scale(1.1);
+        }
+        .carousel-arrow.prev {
+            left: 10px;
+        }
+        .carousel-arrow.next {
+            right: 10px;
+        }
+        .carousel-dots {
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            z-index: 10;
+        }
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .carousel-dot.active {
+            background: var(--white);
+            transform: scale(1.2);
+        }
+        .carousel-dot:hover {
+            background: var(--white);
+            transform: scale(1.2);
+        }
+        .image-counter {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            z-index: 10;
+        }
+        
         .product-info { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
         .product-name { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--brown-dark); margin-bottom: 15px; line-height: 1.3; }
         .product-desc { color: #666; margin-bottom: 20px; flex-grow: 1; }
@@ -87,27 +175,51 @@
         footer {
             background: var(--brown-dark); color: var(--cream); padding: 50px 0 30px; text-align: center;
         }
-        .whatsapp-link {
-            display: inline-flex; align-items: center; gap: 12px; background: rgba(212, 175, 55, 0.1);
-            color: var(--gold-light); padding: 15px 30px; border-radius: 50px; text-decoration: none;
-            font-weight: 600; font-size: 1.2rem; margin-bottom: 30px; transition: all 0.3s;
-            border: 1px solid rgba(212, 175, 55, 0.3);
+        .footer-whatsapp-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
         }
-        .whatsapp-link:hover { background: rgba(212, 175, 55, 0.2); transform: translateY(-3px); }
+        .whatsapp-link {
+            display: inline-flex; 
+            align-items: center; 
+            gap: 12px; 
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold-light); 
+            padding: 15px 25px; 
+            border-radius: 50px; 
+            text-decoration: none;
+            font-weight: 600; 
+            font-size: 1.1rem; 
+            transition: all 0.3s;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            white-space: nowrap; /* Impede que o texto quebre em várias linhas */
+        }
+        .whatsapp-link:hover { 
+            background: rgba(212, 175, 55, 0.2); 
+            transform: translateY(-3px); 
+        }
+        
+        .contact-info {
+            font-size: 1.4rem;
+            margin-bottom: 25px;
+            color: var(--gold-light);
+        }
 
-        /* MODAL PARA VISUALIZAÇÃO DA IMAGEM (NOVO) */
+        /* MODAL PARA VISUALIZAÇÃO DA IMAGEM COM NAVEGAÇÃO */
         .image-modal {
-            display: none; /* Escondido por padrão */
+            display: none;
             position: fixed;
-            z-index: 2000; /* Fica acima de tudo */
+            z-index: 2000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.9); /* Fundo escuro */
+            background-color: rgba(0, 0, 0, 0.95);
             justify-content: center;
             align-items: center;
             animation: fadeIn 0.3s ease;
+            touch-action: none; /* Importante para arrastar no mobile */
         }
         .image-modal.active {
             display: flex;
@@ -116,11 +228,81 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        .modal-content {
+        .modal-content-container {
+            position: relative;
             max-width: 90%;
             max-height: 90%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        .modal-slide-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.3s ease;
+            cursor: grab;
+        }
+        .modal-slide-container.grabbing {
+            cursor: grabbing;
+            transition: none;
+        }
+        .modal-slide {
+            flex: 0 0 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        .modal-content {
+            max-width: 100%;
+            max-height: 90vh;
             border-radius: 8px;
             box-shadow: 0 5px 30px rgba(0,0,0,0.5);
+            object-fit: contain;
+        }
+        .modal-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            cursor: pointer;
+            z-index: 2002;
+            transition: all 0.3s;
+            opacity: 0.7;
+        }
+        .modal-arrow:hover {
+            background: rgba(255, 255, 255, 0.3);
+            opacity: 1;
+            transform: translateY(-50%) scale(1.1);
+        }
+        .modal-arrow.prev {
+            left: 20px;
+        }
+        .modal-arrow.next {
+            right: 20px;
+        }
+        .modal-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--white);
+            font-size: 1.2rem;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 20px;
+            border-radius: 20px;
+            z-index: 2002;
         }
         .close-modal {
             position: absolute;
@@ -138,11 +320,49 @@
         }
 
         @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; } .logo-circle { width: 100px; height: 100px; }
-            .section-title { font-size: 2rem; } .products-grid { grid-template-columns: 1fr; max-width: 500px; margin: 0 auto; }
+            h1 { font-size: 2.5rem; } 
+            .logo-circle { width: 100px; height: 100px; }
+            .section-title { font-size: 2rem; } 
+            .products-grid { grid-template-columns: 1fr; max-width: 500px; margin: 0 auto; }
             .whatsapp-float { width: 60px; height: 60px; font-size: 1.8rem; bottom: 20px; right: 20px; }
             .close-modal { top: 15px; right: 20px; font-size: 40px; }
+            .carousel-arrow { 
+                width: 35px; height: 35px; font-size: 1rem; 
+                opacity: 0.8 !important;
+            }
+            .modal-arrow {
+                width: 45px;
+                height: 45px;
+                font-size: 1.4rem;
+            }
+            .modal-arrow.prev {
+                left: 10px;
+            }
+            .modal-arrow.next {
+                right: 10px;
+            }
+            .modal-counter {
+                bottom: 15px;
+                font-size: 1rem;
+                padding: 6px 15px;
+            }
+            .whatsapp-link {
+                font-size: 1rem;
+                padding: 12px 20px;
+            }
         }
+        
+        @media (max-width: 480px) {
+            .whatsapp-link {
+                font-size: 0.95rem;
+                padding: 10px 15px;
+                gap: 8px;
+            }
+            .whatsapp-link i {
+                font-size: 1.1rem;
+            }
+        }
+        
         .flatpickr-calendar { font-family: 'Montserrat', sans-serif; }
     </style>
 </head>
@@ -153,7 +373,7 @@
                 <div class="logo-circle">
                     <img src="https://i.postimg.cc/dtBhFrvP/Screenshot-2025-12-22-21-25-53-869-com-instagram-android-edit.jpg" 
                          alt="Logo Pegue e Monte" 
-                         onclick="openImageModal(this.src, this.alt)">
+                         onclick="openImageModalFromLogo(this.src, this.alt)">
                 </div>
                 <h1>Pegue e Monte</h1>
                 <p class="tagline">Alugue decorações encantadoras para tornar sua festa inesquecível</p>
@@ -173,11 +393,11 @@
     <footer>
         <div class="container">
             <p class="contact-info">Fale Conosco para Alugar</p>
-            <p>
+            <div class="footer-whatsapp-container">
                 <a href="https://wa.me/5521996105600" class="whatsapp-link" id="whatsappLink">
                     <i class="fab fa-whatsapp"></i> WhatsApp: (21) 99610-5600
                 </a>
-            </p>
+            </div>
             <p class="footer-text">
                 © 2024 Pegue e Monte - Aluguel de Decoração para Festas<br>Todos os direitos reservados
             </p>
@@ -188,10 +408,21 @@
         <i class="fab fa-whatsapp"></i>
     </a>
 
-    <!-- MODAL PARA VISUALIZAÇÃO DE IMAGEM (NOVO) -->
+    <!-- MODAL PARA VISUALIZAÇÃO DE IMAGEM COM NAVEGAÇÃO -->
     <div id="imageModal" class="image-modal" onclick="closeImageModal(event)">
         <span class="close-modal" onclick="closeImageModal(event)">&times;</span>
-        <img class="modal-content" id="expandedImage" alt="Imagem ampliada">
+        <div class="modal-content-container">
+            <div class="modal-arrow prev" onclick="navigateModal(-1)">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="modal-slide-container" id="modalSlideContainer">
+                <!-- Slides são inseridos dinamicamente -->
+            </div>
+            <div class="modal-arrow next" onclick="navigateModal(1)">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="modal-counter" id="modalCounter">1/1</div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -202,32 +433,60 @@
                 id: 1,
                 nome: "Kit Comemore",
                 descricao: "Kit comemore com:<br>• painel redondo<br>• trio de cilindros<br>• 1 Boleira<br>• 4 Bandejas<br>• Tapete<br><br><strong>R$ 120,00</strong> - A mesma base com tema a escolha do cliente",
-                foto: "https://i.postimg.cc/5ykCX2bG/Messenger-creation-A04EC7BF-384D-4AA0-8236-F5F7F907D43F.jpg",
+                fotos: [
+                    "https://i.postimg.cc/5ykCX2bG/Messenger-creation-A04EC7BF-384D-4AA0-8236-F5F7F907D43F.jpg",
+                    "https://i.postimg.cc/dtBhFrvP/Screenshot-2025-12-22-21-25-53-869-com-instagram-android-edit.jpg",
+                    "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                ],
                 tamanho: "Pegue e monte"
             },
             {
                 id: 2,
                 nome: "Kit Básico",
                 descricao: "Kit Básico com:<br>• Painel romano com capa lisa <br>• 1 Mesa cubo<br>• tapete<br>• 1 boleira<br>• 3 bandejas<br><br><strong>R$ 110,00</strong> - a mesma base, cor a escolha do cliente",
-                foto: "https://i.postimg.cc/NMtsxqpZ/Messenger-creation-00DB5011-4827-455F-9AE5-2D23C8CF719F.jpg",
+                fotos: [
+                    "https://i.postimg.cc/NMtsxqpZ/Messenger-creation-00DB5011-4827-455F-9AE5-2D23C8CF719F.jpg",
+                    "https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                    "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                ],
                 tamanho: "Pegue e monte"
             },
             {
                 id: 3,
                 nome: "Kit Encanto",
                 descricao: "Kit encanto com:<br>• painel redondo<br>• trio de mesas cubo<br>• tapete<br>• 1 boleira<br>• 4 bandejas<br><br><strong>R$ 160,00</strong> - a mesma base com tema a escolha do cliente",
-                foto: "https://i.postimg.cc/XqysNm0x/Messenger-creation-619692D7-37F8-4ABE-842B-27F7FC6A65C1.jpg",
+                fotos: [
+                    "https://i.postimg.cc/XqysNm0x/Messenger-creation-619692D7-37F8-4ABE-842B-27F7FC6A65C1.jpg",
+                    "https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                    "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                ],
                 tamanho: "Pegue e monte"
             },
             {
                 id: 4,
                 nome: "Mini Kit - Tema Personalizado",
                 descricao: "Mini Kit com:<br>• Mini painel com capa<br>• display de mesa<br>• mesa e tapete<br>• 1 boleira<br>• 4 bandejas<br>• mini arco de balões<br><br><strong>R$ 95,00</strong> - a mesma base com tema a escolha do cliente",
-                foto: "https://i.postimg.cc/cHPVcQxz/IMG-20251222-112558-281.jpg",
+                fotos: [
+                    "https://i.postimg.cc/cHPVcQxz/IMG-20251222-112558-281.jpg",
+                    "https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                    "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                ],
                 tamanho: "Mini kit"
             }
         ];
         const WHATSAPP_NUMBER = "5521996105600";
+        
+        // Objeto para armazenar os estados dos carrosséis
+        const carouselStates = {};
+        
+        // Variáveis para controle do modal
+        let currentModalProductId = null;
+        let currentModalImageIndex = 0;
+        let currentModalImages = [];
+        let modalIsDragging = false;
+        let modalStartX = 0;
+        let modalCurrentX = 0;
+        let modalTranslateX = 0;
 
         function mostrarProdutos() {
             const container = document.getElementById('productsContainer');
@@ -241,10 +500,29 @@
                 html += `
                     <div class="product-card" data-product-id="${produto.id}">
                         <div class="product-image">
-                            <img src="${produto.foto}" 
-                                 alt="${produto.nome}" 
-                                 loading="lazy"
-                                 onclick="openImageModal(this.src, this.alt)">
+                            <div class="carousel-container" id="carousel-container-${produto.id}">
+                                <div class="carousel-slide" id="carousel-slide-${produto.id}">
+                                    ${produto.fotos.map((foto, index) => `
+                                        <img src="${foto}" 
+                                             alt="${produto.nome} - Imagem ${index + 1}" 
+                                             loading="lazy"
+                                             onclick="openImageModalFromProduct(${produto.id}, ${index})">
+                                    `).join('')}
+                                </div>
+                                <div class="carousel-arrow prev" onclick="navigateCarousel(${produto.id}, -1)">
+                                    <i class="fas fa-chevron-left"></i>
+                                </div>
+                                <div class="carousel-arrow next" onclick="navigateCarousel(${produto.id}, 1)">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                                <div class="carousel-dots" id="carousel-dots-${produto.id}">
+                                    ${produto.fotos.map((_, index) => `
+                                        <div class="carousel-dot ${index === 0 ? 'active' : ''}" 
+                                             onclick="goToSlide(${produto.id}, ${index})"></div>
+                                    `).join('')}
+                                </div>
+                                <div class="image-counter" id="image-counter-${produto.id}">1/${produto.fotos.length}</div>
+                            </div>
                         </div>
                         <div class="product-info">
                             <h3 class="product-name">${produto.nome}</h3>
@@ -262,6 +540,302 @@
             });
             container.innerHTML = html;
             inicializarSeletoresData();
+            
+            // Inicializar carrosséis
+            PRODUTOS.forEach(produto => {
+                inicializarCarrossel(produto.id);
+            });
+        }
+
+        function inicializarCarrossel(produtoId) {
+            // Inicializar estado do carrossel
+            carouselStates[produtoId] = {
+                currentIndex: 0,
+                totalSlides: PRODUTOS.find(p => p.id === produtoId).fotos.length
+            };
+            
+            const container = document.getElementById(`carousel-container-${produtoId}`);
+            let isDragging = false;
+            let startX = 0;
+            
+            // Configurar arraste
+            container.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                isDragging = true;
+            });
+            
+            container.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                const currentX = e.touches[0].clientX;
+                const diff = startX - currentX;
+                
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0) {
+                        navigateCarousel(produtoId, 1);
+                    } else {
+                        navigateCarousel(produtoId, -1);
+                    }
+                    isDragging = false;
+                }
+            });
+            
+            container.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+            
+            // Para desktop com mouse
+            container.addEventListener('mousedown', (e) => {
+                startX = e.clientX;
+                isDragging = true;
+                e.preventDefault();
+            });
+            
+            container.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const currentX = e.clientX;
+                const diff = startX - currentX;
+                
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0) {
+                        navigateCarousel(produtoId, 1);
+                    } else {
+                        navigateCarousel(produtoId, -1);
+                    }
+                    isDragging = false;
+                }
+            });
+            
+            container.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+            
+            container.addEventListener('mouseleave', () => {
+                isDragging = false;
+            });
+        }
+
+        function navigateCarousel(produtoId, direction) {
+            const state = carouselStates[produtoId];
+            state.currentIndex = (state.currentIndex + direction + state.totalSlides) % state.totalSlides;
+            updateCarousel(produtoId);
+        }
+
+        function goToSlide(produtoId, index) {
+            const state = carouselStates[produtoId];
+            state.currentIndex = index;
+            updateCarousel(produtoId);
+        }
+
+        function updateCarousel(produtoId) {
+            const state = carouselStates[produtoId];
+            const slide = document.getElementById(`carousel-slide-${produtoId}`);
+            const dots = document.querySelectorAll(`#carousel-dots-${produtoId} .carousel-dot`);
+            const counter = document.getElementById(`image-counter-${produtoId}`);
+            
+            // Atualizar posição do slide
+            slide.style.transform = `translateX(-${state.currentIndex * 100}%)`;
+            
+            // Atualizar pontos
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === state.currentIndex);
+            });
+            
+            // Atualizar contador
+            counter.textContent = `${state.currentIndex + 1}/${state.totalSlides}`;
+        }
+
+        /* FUNÇÕES PARA O MODAL COM NAVEGAÇÃO E ARRASTE */
+        function openImageModalFromProduct(produtoId, imageIndex) {
+            const produto = PRODUTOS.find(p => p.id === produtoId);
+            if (!produto) return;
+            
+            currentModalProductId = produtoId;
+            currentModalImageIndex = imageIndex;
+            currentModalImages = produto.fotos;
+            
+            openModalWithImages();
+        }
+        
+        function openImageModalFromLogo(imageSrc, imageAlt) {
+            // Para o logo, usamos apenas uma imagem
+            currentModalProductId = null;
+            currentModalImageIndex = 0;
+            currentModalImages = [imageSrc];
+            
+            openModalWithImages();
+        }
+        
+        function openModalWithImages() {
+            const modal = document.getElementById('imageModal');
+            const modalSlideContainer = document.getElementById('modalSlideContainer');
+            const modalCounter = document.getElementById('modalCounter');
+            
+            // Limpar slides anteriores
+            modalSlideContainer.innerHTML = '';
+            
+            // Adicionar todos os slides
+            currentModalImages.forEach((imageSrc, index) => {
+                const slideDiv = document.createElement('div');
+                slideDiv.className = 'modal-slide';
+                
+                const img = document.createElement('img');
+                img.className = 'modal-content';
+                img.src = imageSrc;
+                img.alt = `Imagem ${index + 1}`;
+                img.onclick = (e) => e.stopPropagation(); // Impede fechar ao clicar na imagem
+                
+                slideDiv.appendChild(img);
+                modalSlideContainer.appendChild(slideDiv);
+            });
+            
+            // Ir para a imagem correta
+            goToModalSlide(currentModalImageIndex);
+            
+            modalCounter.textContent = `${currentModalImageIndex + 1}/${currentModalImages.length}`;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Inicializar funcionalidade de arraste
+            inicializarArrasteModal();
+        }
+        
+        function inicializarArrasteModal() {
+            const modalSlideContainer = document.getElementById('modalSlideContainer');
+            modalTranslateX = -currentModalImageIndex * 100;
+            updateModalTransform();
+            
+            // Eventos de touch para mobile
+            modalSlideContainer.addEventListener('touchstart', handleModalTouchStart);
+            modalSlideContainer.addEventListener('touchmove', handleModalTouchMove);
+            modalSlideContainer.addEventListener('touchend', handleModalTouchEnd);
+            
+            // Eventos de mouse para desktop
+            modalSlideContainer.addEventListener('mousedown', handleModalMouseDown);
+            modalSlideContainer.addEventListener('mousemove', handleModalMouseMove);
+            modalSlideContainer.addEventListener('mouseup', handleModalMouseUp);
+            modalSlideContainer.addEventListener('mouseleave', handleModalMouseLeave);
+        }
+        
+        function handleModalTouchStart(e) {
+            modalStartX = e.touches[0].clientX;
+            modalIsDragging = true;
+            modalSlideContainer.classList.add('grabbing');
+        }
+        
+        function handleModalTouchMove(e) {
+            if (!modalIsDragging) return;
+            modalCurrentX = e.touches[0].clientX;
+            const diff = modalStartX - modalCurrentX;
+            modalTranslateX = -currentModalImageIndex * 100 - (diff / window.innerWidth * 100);
+            updateModalTransform();
+        }
+        
+        function handleModalTouchEnd() {
+            if (!modalIsDragging) return;
+            modalIsDragging = false;
+            modalSlideContainer.classList.remove('grabbing');
+            
+            const diff = modalStartX - modalCurrentX;
+            const threshold = window.innerWidth * 0.1; // 10% da tela
+            
+            if (Math.abs(diff) > threshold) {
+                if (diff > 0 && currentModalImageIndex < currentModalImages.length - 1) {
+                    navigateModal(1);
+                } else if (diff < 0 && currentModalImageIndex > 0) {
+                    navigateModal(-1);
+                } else {
+                    goToModalSlide(currentModalImageIndex);
+                }
+            } else {
+                goToModalSlide(currentModalImageIndex);
+            }
+        }
+        
+        function handleModalMouseDown(e) {
+            modalStartX = e.clientX;
+            modalIsDragging = true;
+            modalSlideContainer.classList.add('grabbing');
+            e.preventDefault();
+        }
+        
+        function handleModalMouseMove(e) {
+            if (!modalIsDragging) return;
+            modalCurrentX = e.clientX;
+            const diff = modalStartX - modalCurrentX;
+            modalTranslateX = -currentModalImageIndex * 100 - (diff / window.innerWidth * 100);
+            updateModalTransform();
+        }
+        
+        function handleModalMouseUp() {
+            if (!modalIsDragging) return;
+            modalIsDragging = false;
+            modalSlideContainer.classList.remove('grabbing');
+            
+            const diff = modalStartX - modalCurrentX;
+            const threshold = window.innerWidth * 0.1; // 10% da tela
+            
+            if (Math.abs(diff) > threshold) {
+                if (diff > 0 && currentModalImageIndex < currentModalImages.length - 1) {
+                    navigateModal(1);
+                } else if (diff < 0 && currentModalImageIndex > 0) {
+                    navigateModal(-1);
+                } else {
+                    goToModalSlide(currentModalImageIndex);
+                }
+            } else {
+                goToModalSlide(currentModalImageIndex);
+            }
+        }
+        
+        function handleModalMouseLeave() {
+            if (modalIsDragging) {
+                modalIsDragging = false;
+                modalSlideContainer.classList.remove('grabbing');
+                goToModalSlide(currentModalImageIndex);
+            }
+        }
+        
+        function updateModalTransform() {
+            const modalSlideContainer = document.getElementById('modalSlideContainer');
+            modalSlideContainer.style.transform = `translateX(${modalTranslateX}%)`;
+        }
+        
+        function navigateModal(direction) {
+            if (!currentModalImages.length) return;
+            
+            const newIndex = currentModalImageIndex + direction;
+            if (newIndex >= 0 && newIndex < currentModalImages.length) {
+                goToModalSlide(newIndex);
+            }
+        }
+        
+        function goToModalSlide(index) {
+            currentModalImageIndex = index;
+            modalTranslateX = -currentModalImageIndex * 100;
+            updateModalTransform();
+            
+            const modalCounter = document.getElementById('modalCounter');
+            modalCounter.textContent = `${currentModalImageIndex + 1}/${currentModalImages.length}`;
+        }
+
+        function closeImageModal(event) {
+            if (event.target.classList.contains('close-modal') || event.target.id === 'imageModal') {
+                const modal = document.getElementById('imageModal');
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+                
+                // Remover event listeners de arraste
+                const modalSlideContainer = document.getElementById('modalSlideContainer');
+                modalSlideContainer.removeEventListener('touchstart', handleModalTouchStart);
+                modalSlideContainer.removeEventListener('touchmove', handleModalTouchMove);
+                modalSlideContainer.removeEventListener('touchend', handleModalTouchEnd);
+                modalSlideContainer.removeEventListener('mousedown', handleModalMouseDown);
+                modalSlideContainer.removeEventListener('mousemove', handleModalMouseMove);
+                modalSlideContainer.removeEventListener('mouseup', handleModalMouseUp);
+                modalSlideContainer.removeEventListener('mouseleave', handleModalMouseLeave);
+            }
+            event.stopPropagation();
         }
 
         function inicializarSeletoresData() {
@@ -293,30 +867,6 @@
             return false;
         }
 
-        /* FUNÇÕES PARA O VISUALIZADOR DE IMAGEM (NOVO) */
-        function openImageModal(imageSrc, imageAlt) {
-            const modal = document.getElementById('imageModal');
-            const expandedImg = document.getElementById('expandedImage');
-            
-            expandedImg.src = imageSrc;
-            expandedImg.alt = imageAlt;
-            modal.classList.add('active');
-            // Impede a rolagem da página quando o modal estiver aberto
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeImageModal(event) {
-            // Fecha se clicar no 'X' ou fora da imagem
-            if (event.target.classList.contains('close-modal') || event.target.id === 'imageModal') {
-                const modal = document.getElementById('imageModal');
-                modal.classList.remove('active');
-                // Restaura a rolagem da página
-                document.body.style.overflow = 'auto';
-            }
-            // Evita que o clique na própria imagem feche o modal
-            event.stopPropagation();
-        }
-
         // Fecha o modal com a tecla ESC
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
@@ -325,6 +875,13 @@
                     modal.classList.remove('active');
                     document.body.style.overflow = 'auto';
                 }
+            }
+            
+            // Navegação no modal com setas do teclado
+            if (event.key === 'ArrowLeft') {
+                navigateModal(-1);
+            } else if (event.key === 'ArrowRight') {
+                navigateModal(1);
             }
         });
 
